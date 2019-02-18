@@ -44,7 +44,6 @@ export class AuthService {
       .createUserWithEmailAndPassword(authData.email, authData.password)
       .then(result => {
         this.uiService.loadingStateChanged.next(false);
-        console.log(result);
       })
       .catch(error => {
         this.uiService.loadingStateChanged.next(false);
@@ -57,7 +56,6 @@ export class AuthService {
     this.afAuth.auth
       .signInWithEmailAndPassword(authData.email, authData.password)
       .then(result => {
-        console.log(result);
         this.uiService.loadingStateChanged.next(false);
       })
       .catch(error => {
