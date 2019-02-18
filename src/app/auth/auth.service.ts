@@ -1,58 +1,64 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 import { User } from './user.model';
 import { AuthData } from './auth-data.model';
+import { TrainingService } from '../training/training.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   authChange = new Subject<boolean>();
+  private isAuthenticated = false;
   private user: User;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private afAuth: AngularFireAuth,
+    private trainingService: TrainingService
+  ) {}
+
+  initAuthListener() {
+    this.afAuth.authState.subscribe(user => {
+      if (user) {
+        this.isAuthenticated = true;
+        this.authChange.next(true);
+        this.router.navigate(['/training']);
+      } else {
+        this.trainingService.cancelSubscriptions();
+        this.isAuthenticated = false;
+        this.authChange.next(false);
+        this.router.navigate(['/login']);
+      }
+    });
+  }
 
   registerUser(authData: AuthData) {
-    this.user = {
-      email: authData.email,
-      userId: Math.round(Math.random() * 10000).toString()
-    };
-    this.authSuccessfully();
+    this.afAuth.auth
+      .createUserWithEmailAndPassword(authData.email, authData.password)
+      // .then(result => {
+      //   this.authSuccessfully();
+      // })
+      .catch(error => console.error(error));
   }
 
   login(authData: AuthData) {
-    this.user = {
-      email: authData.email,
-      userId: Math.round(Math.random() * 10000).toString()
-    };
-    this.authSuccessfully();
+    this.afAuth.auth
+      .signInWithEmailAndPassword(authData.email, authData.password)
+      // .then(result => {
+      //   this.authSuccessfully();
+      // })
+      .catch(error => console.error(error));
   }
 
   logout() {
-    this.user = null;
-    this.authChange.next(false);
-    this.router.navigate(['/login']);
-  }
-
-  getUser() {
-    /**
-     * since this.user is a private object
-     * returning it directly would be a reference to the
-     * private object which then could be modified.
-     * In order to prevent this, we use the spread (...) operator
-     * and return a brand new object identical to the private object.
-     */
-    return {...this.user};
+    this.afAuth.auth.signOut();
   }
 
   isAuth() {
-    return !!this.user !== false;
-  }
-
-  private authSuccessfully() {
-    this.authChange.next(true);
-    this.router.navigate(['/training']);
+    return this.isAuthenticated;
   }
 }
