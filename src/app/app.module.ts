@@ -5,7 +5,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MaterialModule } from './material.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AuthModule } from './auth/auth.module';
-import { TrainingModule } from './training/training.module';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from 'src/environments/environment';
 
@@ -13,6 +12,7 @@ import { AppComponent } from './app.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { HeaderComponent } from './navigation/header/header.component';
 import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.component';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 
 @NgModule({
   declarations: [
@@ -29,7 +29,7 @@ import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.com
     FlexLayoutModule,
     AngularFireModule.initializeApp(environment.firebase),
     AuthModule,
-    TrainingModule,
+    AngularFirestoreModule
   ],
   providers: [],
   bootstrap: [AppComponent]
