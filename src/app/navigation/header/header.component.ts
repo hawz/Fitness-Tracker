@@ -33,7 +33,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   // the subscription should unsubscribe whenever the component is destroyed
   // so that's why we need the ngOnDestroy lifecycle hook
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
 }
