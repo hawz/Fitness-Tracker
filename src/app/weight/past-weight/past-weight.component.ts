@@ -19,7 +19,6 @@ export class PastWeightComponent implements OnInit {
   ngOnInit() {
     this.weightChangedSubscription = this.weightService.weightMeasurementsChanged.subscribe(
       (weights: Weight[]) => {
-        console.log(weights);
         this.dataSource.data = weights;
       }
     );
