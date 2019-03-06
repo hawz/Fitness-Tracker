@@ -11,6 +11,10 @@
     <mat-icon>fitness_center</mat-icon>
     <span class="nav-caption">Training</span>
   </a>
+  <a *ngIf="isAuth" mat-list-item routerLink="/weight">
+    <mat-icon>fastfood</mat-icon>
+    <span class="nav-caption">Weight</span>
+  </a>
   <mat-list-item *ngIf="isAuth">
     <button mat-icon-button (click)="onLogout()">
       <mat-icon>eject</mat-icon>
