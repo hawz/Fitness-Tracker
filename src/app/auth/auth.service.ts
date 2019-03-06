@@ -7,6 +7,8 @@ import { User } from './user.model';
 import { AuthData } from './auth-data.model';
 import { TrainingService } from '../training/training.service';
 import { UIService } from '../shared/ui.service';
+import { UserService } from '../shared/user.service';
+import { WeightService } from '../weight/weight.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,23 +16,26 @@ import { UIService } from '../shared/ui.service';
 export class AuthService {
   authChange = new Subject<boolean>();
   private isAuthenticated = false;
-  private user: User;
 
   constructor(
     private router: Router,
     private afAuth: AngularFireAuth,
     private trainingService: TrainingService,
+    private userService: UserService,
+    private weightService: WeightService,
     private uiService: UIService
   ) {}
 
   initAuthListener() {
     this.afAuth.authState.subscribe(user => {
       if (user) {
+        this.userService.setUserProperties(user.uid, user.email);
         this.isAuthenticated = true;
         this.authChange.next(true);
         this.router.navigate(['/training']);
       } else {
         this.trainingService.cancelSubscriptions();
+        this.weightService.cancelSubscriptions();
         this.isAuthenticated = false;
         this.authChange.next(false);
         this.router.navigate(['/login']);

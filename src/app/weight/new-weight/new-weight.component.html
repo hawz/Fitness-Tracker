@@ -1,0 +1,51 @@
+<section class="new-weight" fxFlex fxLayout fxLayoutAlign="center">
+  <!-- We want the user to add the weight only if not already inserted,
+    since max 1 weight entry per day is allowed -->
+  <mat-card *ngIf="!canInsertWeight && currentWeight" fxFlex.xs="100%" fxFlex="400px">
+    <mat-card-title fxLayoutAlign="center">
+      Today your weight is
+    </mat-card-title>
+    <mat-card-content fxLayout="column" fxLayoutAlign="center center">
+      <br>
+      <h1>{{ currentWeight.weight }} kg</h1>
+      <p>You're doing great!</p>
+    </mat-card-content>
+  </mat-card>
+
+  <form
+    *ngIf="canInsertWeight"
+    (ngSubmit)="onWeightSubmit(weightForm)"
+    #weightForm="ngForm"
+  >
+    <mat-card fxFlex.xs="100%" fxFlex="400px">
+      <mat-card-title fxLayoutAlign="center">
+        Insert your weight
+      </mat-card-title>
+      <mat-card-content fxLayoutAlign="center">
+        <mat-form-field *ngIf="!isLoading">
+          <input
+            type="number"
+            matInput
+            placeholder="Your weight"
+            name="weight"
+            ngModel
+            required
+            #weightInput="ngModel"
+          />
+          <mat-error *ngIf="weightInput.hasError('required')">
+            Field must not be empty.
+          </mat-error>
+          <mat-error *ngIf="!weightInput.hasError('required')">
+            The provided weight is invalid.
+          </mat-error>
+        </mat-form-field>
+        <mat-spinner *ngIf="isLoading"></mat-spinner>
+      </mat-card-content>
+      <mat-card-actions *ngIf="!isLoading" fxLayoutAlign="center">
+        <button type="submit" mat-raised-button [disabled]="weightForm.invalid">
+          Insert
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </form>
+</section>
